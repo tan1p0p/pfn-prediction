@@ -20,15 +20,15 @@ class DataLoader():
         x = np.zeros((len(self.image_list), self.height, self.width, self.channel))
         for i, imagepath in enumerate(self.image_list):
             image = Image.open(imagepath).convert('RGB')
-            x[i] = np.asarray(image.resize((self.height, self.width)))
+            x[i] = np.asarray(image.resize((self.height, self.width))) / 255.
         self.x = x.astype('float32')
 
-        t = np.zeros((len(self.label_list), self.height, self.width, self.label_num))
+        t = np.zeros((len(self.label_list), self.label_num, self.height, self.width))
         for label_idx, label in enumerate(self.label_list):
             for point_idx, point in enumerate(label):
                 x_pos = int(point[0] / 600 * 224)
                 y_pos = int(point[1] / 600 * 224)
-                t[label_idx][y_pos][x_pos][point_idx] = 1
+                t[label_idx][point_idx][y_pos][x_pos] = 1
         self.t = t.astype('int32')
 
         self.dataset = TupleDataset(x, t)
@@ -43,3 +43,8 @@ class DataLoader():
         self.valid = valid
         self.test = test
         return (self.train, self.valid, self.test)
+
+if __name__ == "__main__":
+    dataloader = DataLoader('data/raw/hands/hand_position.json')
+    dataloader.load_data()
+    train, valid, test = dataloader.split()
