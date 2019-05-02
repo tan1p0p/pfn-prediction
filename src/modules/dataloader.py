@@ -17,19 +17,20 @@ class DataLoader():
         self.label_list = self.annotation_file['posList']
 
     def load_data(self):
-        x = np.zeros((len(self.image_list), self.height, self.width, self.channel))
+        x = np.zeros((len(self.image_list), self.channel, self.height, self.width), dtype='float32')
         for i, imagepath in enumerate(self.image_list):
             image = Image.open(imagepath).convert('RGB')
-            x[i] = np.asarray(image.resize((self.height, self.width))) / 255.
-        self.x = x.astype('float32')
+            np_image = np.asarray(image.resize((self.height, self.width)))
+            x[i] = np.moveaxis(np_image, 2, 0)
+        self.x = x
 
-        t = np.zeros((len(self.label_list), self.label_num, self.height, self.width))
+        t = np.zeros((len(self.label_list), self.label_num, 56, 56), dtype='int32')
         for label_idx, label in enumerate(self.label_list):
             for point_idx, point in enumerate(label):
-                x_pos = int(point[0] / 600 * 224)
-                y_pos = int(point[1] / 600 * 224)
+                x_pos = int(point[0] / 600 * 56)
+                y_pos = int(point[1] / 600 * 56)
                 t[label_idx][point_idx][y_pos][x_pos] = 1
-        self.t = t.astype('int32')
+        self.t = t
 
         self.dataset = TupleDataset(x, t)
         return self.dataset
