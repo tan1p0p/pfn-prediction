@@ -47,7 +47,3 @@ class RefinementStage(chainer.Chain):
         out = F.relu(self.dc3(h))
 
         return out
-
-if __name__ == "__main__":
-    generating_stage = GeneratingStage()
-    refinement_stage = RefinementStage()

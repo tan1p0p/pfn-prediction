@@ -2,7 +2,6 @@ import json
 
 import numpy as np
 from chainer.datasets import TupleDataset, split_dataset_random
-from chainer.iterators import SerialIterator
 from PIL import Image
 
 class DataLoader():
@@ -16,6 +15,8 @@ class DataLoader():
         self.image_list = self.annotation_file['fileList']
         self.label_list = self.annotation_file['posList']
 
+    # Load images and labels from annotation file.
+    # Return TupleDataset which includes whole images and labels.
     def load_data(self):
         x = np.zeros((len(self.image_list), self.channel, self.height, self.width), dtype='float32')
         for i, imagepath in enumerate(self.image_list):
@@ -34,7 +35,8 @@ class DataLoader():
 
         self.dataset = TupleDataset(x, t)
         return self.dataset
-        
+
+    # Return three TupleDataset which separate to train, valid and test.
     def split(self, ratio = (8, 1, 1)):
         train_val_rate = (ratio[0] + ratio[1]) / sum(ratio)
         train_rate = ratio[0] / (ratio[0] + ratio[1])
@@ -44,8 +46,3 @@ class DataLoader():
         self.valid = valid
         self.test = test
         return (self.train, self.valid, self.test)
-
-if __name__ == "__main__":
-    dataloader = DataLoader('data/raw/hands/hand_position.json')
-    dataloader.load_data()
-    train, valid, test = dataloader.split()
