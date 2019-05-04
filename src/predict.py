@@ -58,7 +58,7 @@ def main():
 
     json_file = open('./pred/predicted_label.json','w')
     json.dump(out_json, json_file)
-
+    print('save predicted data to ./pred/predicted_label.json')
 
 if __name__ == "__main__":
     main()
