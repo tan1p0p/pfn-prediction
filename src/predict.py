@@ -10,8 +10,12 @@ from modules.accuracy import get_h_w_labels
 from modules.network import GeneratingStage, RefinementStage
 
 def main():
+    # config
+    image_dir = './data/hands'
+    pred_filepath = './pred/predicted_label.json'
+
     # load images
-    dir_path = os.path.abspath('./data/hands')
+    dir_path = os.path.abspath(image_dir)
     file_list = []
     for extension in ['jpg', 'jpeg', 'png']:
         file_list.append(glob.glob('{}/*.{}'.format(dir_path, extension)))
@@ -56,9 +60,9 @@ def main():
         'posList': pos_list.tolist()
     }
 
-    json_file = open('./pred/predicted_label.json','w')
+    json_file = open(pred_filepath,'w')
     json.dump(out_json, json_file)
-    print('save predicted data to ./pred/predicted_label.json')
+    print('save predicted data to {}'.format(pred_filepath))
 
 if __name__ == "__main__":
     main()

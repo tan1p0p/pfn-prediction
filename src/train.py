@@ -8,11 +8,16 @@ from modules.network import GeneratingStage, RefinementStage
 
 # TODO: Supports using GPU.
 def main():
+    # config
+    epoch_num = 5
+    batch_size = 4
+    annotation_file = './data/position.json'
+
     # load datasets
-    dataloader = DataLoader('./data/position.json')
+    dataloader = DataLoader(annotation_file)
     dataloader.load_data()
     train, valid, test = dataloader.split()
-    train_iter = chainer.iterators.SerialIterator(train, batch_size=4, repeat=True, shuffle=True)
+    train_iter = chainer.iterators.SerialIterator(train, batch_size=batch_size, repeat=True, shuffle=True)
 
     # load networks
     first_stage = GeneratingStage()
@@ -43,7 +48,6 @@ def main():
         'stage2_acc': [],
         'stage3_acc': [],
     }
-    epoch_num = 5
     for epoch in range(epoch_num):
         while True:
             train_batch = train_iter.next()
