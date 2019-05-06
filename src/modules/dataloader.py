@@ -11,9 +11,9 @@ class DataLoader():
         self.channel = 3
         self.label_num = 16
         self.annotation_file_path = annotation_file_path
-        self.annotation_file = json.load(open((self.annotation_file_path), 'r'))
-        self.image_list = self.annotation_file['fileList']
-        self.label_list = self.annotation_file['posList']
+        annotation_file = json.load(open((self.annotation_file_path), 'r'))
+        self.image_list = annotation_file['fileList']
+        self.label_list = annotation_file['posList']
 
     # Load images and labels from annotation file.
     # Return TupleDataset which includes whole images and labels.

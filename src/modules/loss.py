@@ -19,7 +19,7 @@ class MeanAbsoluteErrorWithWeight(function_node.FunctionNode):
         w = np.where(x1 <= 0, 0.001, 1).astype(np.float32)
         self.diff = (x0 - x1) * w
         diff = self.diff.ravel()
-        return np.array(abs(diff).sum() / diff.size, dtype=diff.dtype),
+        return np.array(abs(diff).sum() / diff.size, dtype=diff.dtype)
 
     def forward_gpu(self, inputs):
         x0, x1 = inputs
